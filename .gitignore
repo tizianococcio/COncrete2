@@ -6,3 +6,50 @@ data.csv
 *.pkl
 *.joblib
 *.pyc
+node_modules/
+package-lock*
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Next.js build output
+.next/
+out/
+
+# Production
+build/
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# local env files
+.env*.local
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# misc
+.DS_Store
+*.pem
+.eslint*
