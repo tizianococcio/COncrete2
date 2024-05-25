@@ -2,6 +2,7 @@
 import Head from 'next/head';
 import PredictionForm from '../components/PredictionForm';
 import OptimalValues from '../components/OptimalValues';
+import RealTimeWebSocket from '../components/RealTimeWebSocket'
 
 export default function Page() {
   return (
@@ -15,10 +16,10 @@ export default function Page() {
             <PredictionForm />
           </div>
           <div className="w-full lg:w-2/3 p-4">
-            {/* Placeholder for other components or content */}
             <div className="bg-white rounded-lg shadow-md p-4 h-full">
               {/*<h2 className="text-2xl font-bold mb-4">Other Content</h2>*/}
               <OptimalValues />
+              <RealTimeWebSocket />
             </div>
           </div>
         </div>

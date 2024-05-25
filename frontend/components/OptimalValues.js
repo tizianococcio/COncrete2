@@ -35,7 +35,7 @@ const OptimalValues = () => {
           {Object.entries(optimalValues).map(([key, value]) => (
             <li key={key} className="flex justify-between">
               <span className="font-medium">{key.replace(/_/g, ' ')}:</span>
-              <span>{value}</span>
+              <span>{value.toFixed(2)}</span>
             </li>
           ))}
         </ul>

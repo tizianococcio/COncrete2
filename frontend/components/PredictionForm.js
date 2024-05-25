@@ -3,6 +3,21 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+const labels = {
+  temperature: 'Temperature (°C)',
+  humidity: 'Humidity (%)',
+  curing_time: 'Curing Time (hours)',
+  energy_consumption: 'Energy Consumption (kWh)',
+  amount_produced_m3: 'Amount Produced (m³)',
+  dosing_events: 'Dosing Events',
+  active_power_curve: 'Active Power Curve (W)',
+  truck_drum_rotation_speed: 'Truck Drum Rotation Speed (rpm)',
+  truck_drum_duration: 'Truck Drum Duration (minutes)',
+  cement: 'Cement (kg)',
+  sand: 'Sand (kg)',
+  gravel: 'Gravel (kg)'
+};
+
 const PredictionForm = () => {
   const [formData, setFormData] = useState({
     temperature: 25,
@@ -42,10 +57,15 @@ const PredictionForm = () => {
   return (
     <div className="max-w-2xl mx-auto p-2 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2">CO2 Emissions Prediction</h2>
+
+      <div className="p-4 bg-slate-600 rounded-lg shadow-md m-4">
+        <h3 className='text-white font-bold'>Predicted CO2 Emissions: {prediction !== null ? `${prediction.toFixed(2)} kg/m³` : '---'}</h3>
+      </div>
+
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {Object.keys(formData).map((key) => (
           <div key={key} className="flex flex-col">
-            <label className="text-sm font-medium mb-1">{key.replace(/_/g, ' ')}</label>
+            <label className="text-sm font-medium mb-1">{labels[key]}</label>
             <input
               type="number"
               name={key}
@@ -61,11 +81,6 @@ const PredictionForm = () => {
           </button>
         </div>
       </form>
-      {prediction !== null && (
-                <div>
-                    <h3>Predicted CO2 Emissions: {prediction}</h3>
-                </div>
-            )}
     </div>
   );
 };

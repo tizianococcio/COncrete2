@@ -1,10 +1,40 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, WebSocket
+from sse_starlette.sse import EventSourceResponse
+import asyncio
+from kafka import KafkaConsumer
+import json
+
 from pydantic import BaseModel
 import numpy as np
 from model import load_model, predict_emissions
 from optimizer import optimize_parameters
 
 app = FastAPI()
+
+# Kafka consumer configuration
+consumer = KafkaConsumer(
+    'concrete_production_data',
+    bootstrap_servers='localhost:9092',
+    # security_protocol="SASL_SSL",
+    # sasl_mechanism="PLAIN",
+    # sasl_plain_username="",
+    # sasl_plain_password="",
+    value_deserializer=lambda x: json.loads(x.decode('utf-8'))
+)
+
+async def kafka_event_generator():
+    for message in consumer:
+        yield {
+            "event": "new_data",
+            "data": json.dumps(message.value)
+        }
+        await asyncio.sleep(0.1)
+
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):
+    await websocket.accept()
+    async for message in kafka_event_generator():
+        await websocket.send_json(message)
 
 class InputParameters(BaseModel):
     temperature: float  # degrees Celsius
