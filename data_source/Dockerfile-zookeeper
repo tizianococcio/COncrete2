@@ -1,7 +1,0 @@
-# Dockerfile for Zookeeper
-
-# Use the wurstmeister/zookeeper image from Docker Hub
-FROM ubuntu/zookeeper:3.8-22.04_edge
-
-# Expose ports
-EXPOSE 2181
