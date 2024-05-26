@@ -1,0 +1,11 @@
+# Dockerfile for Kafka
+
+# Use the wurstmeister/kafka image from Docker Hub
+FROM ubuntu/kafka:3.6-22.04_edge
+
+# Set environment variables
+ENV KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092
+ENV KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+
+# Expose ports
+EXPOSE 9092
