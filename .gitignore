@@ -8,6 +8,7 @@ data.csv
 *.pyc
 node_modules/
 package-lock*
+.env
 
 # Dependencies
 node_modules/

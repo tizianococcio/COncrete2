@@ -9,16 +9,27 @@ import numpy as np
 from model import load_model, predict_emissions
 from optimizer import optimize_parameters
 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access environment variables
+host = os.getenv('KAFKA_HOST')
+user = os.getenv('KAFKA_USER')
+pwd = os.getenv('KAFKA_PWD')
+
 app = FastAPI()
 
 # Kafka consumer configuration
 consumer = KafkaConsumer(
     'concrete_production_data',
-    bootstrap_servers='localhost:9092',
-    # security_protocol="SASL_SSL",
-    # sasl_mechanism="PLAIN",
-    # sasl_plain_username="",
-    # sasl_plain_password="",
+    bootstrap_servers=host,
+    sasl_mechanism='SCRAM-SHA-256',
+    security_protocol='SASL_SSL',
+    sasl_plain_username=user,
+    sasl_plain_password=pwd,
     value_deserializer=lambda x: json.loads(x.decode('utf-8'))
 )
 

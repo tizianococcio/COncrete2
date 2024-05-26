@@ -3,9 +3,23 @@ from kafka import KafkaProducer
 import json
 import numpy as np
 import time
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()
+
+# Access environment variables
+host = os.getenv('KAFKA_HOST')
+user = os.getenv('KAFKA_USER')
+pwd = os.getenv('KAFKA_PWD')
 
 producer = KafkaProducer(
-    bootstrap_servers='localhost:9092',
+    bootstrap_servers=host,
+    sasl_mechanism='SCRAM-SHA-256',
+    security_protocol='SASL_SSL',
+    sasl_plain_username=user,
+    sasl_plain_password=pwd,
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
 )
 
