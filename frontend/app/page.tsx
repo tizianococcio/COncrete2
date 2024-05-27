@@ -17,7 +17,6 @@ export default function Page() {
           </div>
           <div className="w-full lg:w-2/3 p-4">
             <div className="bg-white rounded-lg shadow-md p-4 h-full">
-              {/*<h2 className="text-2xl font-bold mb-4">Other Content</h2>*/}
               <OptimalValues />
               <RealTimeWebSocket />
             </div>

@@ -6,7 +6,7 @@ const RealTimeWebSocket = () => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8000/ws');
+    const ws = new WebSocket('ws://localhost:8001/ws');
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data).data;
