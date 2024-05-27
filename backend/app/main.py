@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException, WebSocket
-from sse_starlette.sse import EventSourceResponse
 import asyncio
 from kafka import KafkaConsumer
 import json

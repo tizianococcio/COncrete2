@@ -4,7 +4,7 @@ import os
 
 def load_model():
     # Load the pre-trained model
-    model_path = os.path.join(os.getcwd(), "model", "model.pkl")
+    model_path = os.path.join(os.getcwd(), "../../model", "model.pkl")
     if os.path.exists(model_path):
         model = joblib.load(model_path)
     else:
