@@ -22,6 +22,8 @@ sasl_mechanism = os.getenv('SASL_MECHANISM')
 security_protocol = os.getenv('SECURITY_PROTOCOL')
 
 app = FastAPI()
+model = load_model()
+
 
 # Kafka consumer configuration
 consumer = KafkaConsumer(
@@ -36,6 +38,8 @@ consumer = KafkaConsumer(
 
 async def kafka_event_generator():
     for message in consumer:
+        prediction = predict_emissions(model, message.value)
+        message.value['predicted_co2'] = prediction
         yield {
             "event": "new_data",
             "data": json.dumps(message.value)
@@ -61,8 +65,6 @@ class InputParameters(BaseModel):
     cement: float  # kg
     sand: float  # kg
     gravel: float  # kg
-
-model = load_model()
 
 @app.post("/predict")
 def predict(params: InputParameters):
