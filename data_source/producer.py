@@ -13,11 +13,13 @@ load_dotenv()
 host = os.getenv('KAFKA_HOST')
 user = os.getenv('KAFKA_USER')
 pwd = os.getenv('KAFKA_PWD')
+sasl_mechanism = os.getenv('SASL_MECHANISM')
+security_protocol = os.getenv('SECURITY_PROTOCOL')
 
 producer = KafkaProducer(
     bootstrap_servers=host,
-    sasl_mechanism='SCRAM-SHA-256',
-    security_protocol='SASL_SSL',
+    sasl_mechanism=sasl_mechanism,
+    security_protocol=security_protocol,
     sasl_plain_username=user,
     sasl_plain_password=pwd,
     value_serializer=lambda v: json.dumps(v).encode('utf-8')
