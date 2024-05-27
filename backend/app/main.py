@@ -1,5 +1,4 @@
 from fastapi import FastAPI, HTTPException, WebSocket
-from sse_starlette.sse import EventSourceResponse
 import asyncio
 from kafka import KafkaConsumer
 import json
@@ -68,11 +67,21 @@ model = load_model()
 @app.post("/predict")
 def predict(params: InputParameters):
     try:
-        input_data = np.array([[params.temperature, params.humidity, params.curing_time, params.energy_consumption,
-                                params.amount_produced_m3, params.dosing_events, params.active_power_curve,
-                                params.truck_drum_rotation_speed, params.truck_drum_duration, params.cement,
-                                params.sand, params.gravel]])
-        prediction = predict_emissions(model, input_data)
+        data = {
+            'temperature': params.temperature,  # degrees Celsius
+            'humidity': params.humidity,  # percentage (%), default 60
+            'curing_time': params.curing_time,  # hours
+            'energy_consumption': params.energy_consumption,  # kilowatt-hours (kWh)
+            'amount_produced_m3': params.amount_produced_m3,
+            'dosing_events': params.dosing_events,  # Number of dosing events
+            'active_power_curve': params.active_power_curve,  # watts (W)
+            'truck_drum_rotation_speed': params.truck_drum_rotation_speed,  # rotations per minute (rpm)
+            'truck_drum_duration': params.truck_drum_duration,  # minutes
+            'cement': params.cement,  # kg
+            'sand': params.sand,  # kg
+            'gravel': params.gravel  # kg
+        }
+        prediction = predict_emissions(model, data)
         return {"predicted_co2_emissions": prediction}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))

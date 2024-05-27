@@ -1,6 +1,6 @@
 import joblib
-import numpy as np
 import os
+import pandas as pd
 
 def load_model():
     # Load the pre-trained model
@@ -12,4 +12,5 @@ def load_model():
     return model
 
 def predict_emissions(model, input_data):
+    input_data = pd.DataFrame([input_data])    
     return model.predict(input_data)[0]
