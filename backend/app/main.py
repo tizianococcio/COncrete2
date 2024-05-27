@@ -49,6 +49,11 @@ async def websocket_endpoint(websocket: WebSocket):
     async for message in kafka_event_generator():
         await websocket.send_json(message)
 
+@app.get("/events")
+async def events():
+    event_generator = kafka_event_generator()
+    return EventSourceResponse(event_generator)
+
 class InputParameters(BaseModel):
     temperature: float  # degrees Celsius
     humidity: float  # percentage (%)
