@@ -1,4 +1,5 @@
-from fastapi import FastAPI, HTTPException, WebSocket
+from fastapi import FastAPI, HTTPException, WebSocket, Query
+from typing import Optional
 import asyncio
 from kafka import KafkaConsumer
 import json
@@ -6,7 +7,7 @@ import json
 from pydantic import BaseModel
 import numpy as np
 from model import load_model, predict_emissions
-from optimizer import optimize_parameters
+from optimizer import CO2Optimizer
 
 from dotenv import load_dotenv
 import os
@@ -89,11 +90,14 @@ def predict(params: InputParameters):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.get("/getoptimal")
-def get_optimal():
+def get_optimal(temperature: Optional[float] = Query(None)):
     try:
-        optimal_params, co2_emissions = optimize_parameters(model)
+        optimizer = CO2Optimizer(model)
+        if temperature:
+            optimizer.set_fixed_param('temperature', temperature)
+        optimal_inputs, co2_emissions = optimizer.optimize_parameters()
         return {
-            "optimal_parameters": optimal_params,
+            "optimal_parameters": optimal_inputs,
             "expected_co2_emissions": co2_emissions
             }
     except Exception as e:
