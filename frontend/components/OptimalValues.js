@@ -38,14 +38,14 @@ const OptimalValues = ({ temperature }) => {
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-4 bg-white rounded-lg shadow-md">
+    <div className="p-4 mt-2.5 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4">Optimal Input Parameters for 1m³ of concrete (@ {optimalValues.temperature.toFixed(2)} °C)</h2>
       {optimalValues ? (
-        <ul className="space-y-2">
+        <ul className="space-y-1 columns-2 font-mono">
           {Object.entries(optimalValues).map(([key, value]) => (
             <li key={key} className="flex justify-between">
-              <span className="font-medium">{key.replace(/_/g, ' ')}:</span>
-              <span>{value.toFixed(2)}</span>
+              <span>{key.replace(/_/g, ' ')}:</span>
+              <span className="font-sans font-semibold">{value.toFixed(2)}</span>
             </li>
           ))}
         </ul>
