@@ -17,7 +17,7 @@ model = make_pipeline(scaler, PolynomialFeatures(2), LinearRegression())
 model.fit(X_train, y_train)
 
 # Save model
-joblib.dump(model, 'model.pkl')
+joblib.dump(model, 'model/model.pkl')
 
 # Save test data
-joblib.dump([X_test, y_test], 'test_split.pkl')
+joblib.dump([X_test, y_test], 'model/test_split.pkl')

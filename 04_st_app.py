@@ -3,7 +3,7 @@ import joblib
 import pandas as pd
 
 # Load the model
-model = joblib.load('model.pkl')
+model = joblib.load('model/model.pkl')
 
 # Title and introduction
 st.set_page_config(page_title='CO2 Emission Model')

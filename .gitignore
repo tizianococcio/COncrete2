@@ -3,7 +3,6 @@ env/
 env_fast/
 temp/
 data.csv
-*.pkl
 *.joblib
 *.pyc
 node_modules/
