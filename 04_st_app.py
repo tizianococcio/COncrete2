@@ -68,7 +68,7 @@ if st.button('Predict CO2 Emissions'):
 st.header('Training data inspectation')
 import seaborn as sns
 import matplotlib.pyplot as plt
-data = pd.read_csv('data.csv')
+data = pd.read_csv('model/data.csv')
 # Compute the correlation matrix
 corr_matrix = data.corr()
 

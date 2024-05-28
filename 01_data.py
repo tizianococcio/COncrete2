@@ -68,7 +68,7 @@ scaler = scaler.fit(
 )
 
 # Save the scaler
-joblib.dump(scaler, 'scaler.joblib')
+joblib.dump(scaler, 'model/scaler.joblib')
 
 # Save to CSV
-data.to_csv('data.csv', index=False)
+data.to_csv('model/data.csv', index=False)
