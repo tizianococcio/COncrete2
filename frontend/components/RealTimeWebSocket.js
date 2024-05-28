@@ -2,7 +2,7 @@
 "use client";
 import React, { useEffect, useState } from 'react';
 
-const RealTimeWebSocket = () => {
+const RealTimeWebSocket = ({ onTemperatureUpdate }) => {
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -10,7 +10,9 @@ const RealTimeWebSocket = () => {
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data).data;
-      setData(JSON.parse(newData));
+      const parsed_data = JSON.parse(newData)
+      onTemperatureUpdate(parsed_data.temperature);
+      setData(parsed_data);
     };
 
     return () => {

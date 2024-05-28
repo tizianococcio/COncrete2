@@ -1,8 +1,7 @@
 // `app/page.tsx` is the UI for the `/` URL
-import Head from 'next/head';
 import PredictionForm from '../components/PredictionForm';
-import OptimalValues from '../components/OptimalValues';
-import RealTimeWebSocket from '../components/RealTimeWebSocket'
+import RealTimeMonitor from '../components/RealTimeMonitor';
+
 
 export default function Page() {
   return (
@@ -17,8 +16,7 @@ export default function Page() {
           </div>
           <div className="w-full lg:w-2/3 p-4">
             <div className="bg-white rounded-lg shadow-md p-4 h-full">
-              <RealTimeWebSocket />
-              <OptimalValues />
+              <RealTimeMonitor />
             </div>
           </div>
         </div>
