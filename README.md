@@ -59,6 +59,10 @@ I used TailwindCSS for basic styling.
     - Improve in speed (maybe caching?)
 - ML Model
     - Use real-world data and build a proper model
+- Frontend
+    - Plot optimal CO emissions along with estimated ones to show possible reduction in environmental impact
+    - Better visualization of CO2 emissions along longer time window (moving average?)
+
 
 # Disclaimer
 I used LLMs for mechanical tasks, like writing docstring comments.
