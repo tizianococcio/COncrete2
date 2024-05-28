@@ -1,34 +1,54 @@
-import joblib
 import os
+import joblib
 import pandas as pd
+from typing import Optional, Dict, Any
+from config import get_default_parameters
+import logging
 
-def load_model():
-    # Load the pre-trained model
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def load_model() -> Optional[Any]:
+    """
+    Load the pre-trained model from a .pkl file.
+    
+    Returns:
+        Optional[Any]: The loaded model, or None if the model file does not exist.
+    """
     model_path = os.path.join(os.getcwd(), "model", "model.pkl")
     if os.path.exists(model_path):
-        model = joblib.load(model_path)
+        try:
+            model = joblib.load(model_path)
+            return model
+        except Exception as e:
+            logger.error("Error loading model: %s", e)
+            return None
     else:
+        logger.warning("Model file not found at %s", model_path)
         return None
-    return model
 
-def get_default():
-    return {
-        'temperature': 15,  # degrees Celsius
-        'humidity': 30,  # percentage (%), default 60
-        'curing_time': 18,  # hours
-        'energy_consumption': 105,  # kilowatt-hours (kWh)
-        'amount_produced_m3': 1,
-        'dosing_events': 2,  # Number of dosing events
-        'active_power_curve': 105,  # watts (W)
-        'truck_drum_rotation_speed': 11,  # rotations per minute (rpm)
-        'truck_drum_duration': 22,  # minutes
-        'cement': 300,  # kg
-        'sand': 580,  # kg
-        'gravel': 1020  # kg
-    }    
-
-def predict_emissions(model, input_data):
-    data = get_default()
+def predict_emissions(model: Any, input_data: Dict[str, Any]) -> float:
+    """
+    Predict CO2 emissions based on input data using the loaded model.
+    
+    Args:
+        model (Any): The pre-trained model.
+        input_data (Dict[str, Any]): A dictionary with input parameters for the prediction.
+        
+    Returns:
+        float: The predicted CO2 emissions.
+    """
+    if model is None:
+        logger.error("No model is loaded. Prediction cannot be performed.")
+        raise ValueError("Model not loaded")    
+    data = get_default_parameters()
     data.update(input_data)
-    input_data = pd.DataFrame([data])    
-    return model.predict(input_data)[0]
+
+    try:
+        input_data = pd.DataFrame([data])    
+        prediction = model.predict(input_data)[0]
+        return prediction
+    except Exception as e:
+        logger.error("Error making prediction: %s", e)
+        raise
