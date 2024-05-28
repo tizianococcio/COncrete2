@@ -3,6 +3,7 @@ from typing import Optional, Dict, Any
 import asyncio
 from kafka import KafkaConsumer
 import json
+import config
 from config import InputParameters
 from model import load_model, predict_emissions
 from optimizer import CO2Optimizer
@@ -94,6 +95,10 @@ async def websocket_endpoint(websocket: WebSocket):
     await websocket.accept()
     async for message in kafka_event_generator():
         await websocket.send_json(message)
+
+@app.get("/units")
+def get_units() -> Dict[str, Any]:
+    return config.get_units()
 
 @app.post("/predict")
 def predict(params: InputParameters) -> Dict[str, Any]:

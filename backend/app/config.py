@@ -18,6 +18,22 @@ class InputParameters(BaseModel):
     sand: float  # kg
     gravel: float  # kg
 
+def get_units() -> Dict[str, Any]:
+    return {
+        'temperature': '°C',  # degrees Celsius
+        'humidity': '%',  # percentage (%), default 60
+        'curing_time': 'hours',  # hours
+        'energy_consumption': 'kWh',  # kilowatt-hours (kWh)
+        'amount_produced_m3': 'm³',
+        'dosing_events': '',  # Number of dosing events
+        'active_power_curve': 'W',  # watts (W)
+        'truck_drum_rotation_speed': 'rpm',  # rotations per minute (rpm)
+        'truck_drum_duration': 'minutes',  # minutes
+        'cement': 'kg',  # kg
+        'sand': 'kg',  # kg
+        'gravel': 'kg'  # kg
+    }
+
 def get_default_parameters() -> Dict[str, Any]:
     """
     Get default input parameters for the model prediction.

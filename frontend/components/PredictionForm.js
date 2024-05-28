@@ -58,8 +58,8 @@ const PredictionForm = () => {
     <div className="max-w-2xl mx-auto p-2 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2">Manual CO2 Emissions Prediction</h2>
 
-      <div className="p-4 bg-slate-600 rounded-lg shadow-md m-4">
-        <h3 className='text-white font-bold'>Predicted CO2 Emissions: {prediction !== null ? `${prediction.toFixed(2)} kg/m³` : '---'}</h3>
+      <div className="p-4 bg-slate-600 rounded-lg shadow-md m-4 text-center">
+        <h3 className='text-white'>Predicted CO2 Emissions: <span className='text-xl font-bold'>{prediction !== null ? `${prediction.toFixed(2)} kg/m³` : '---'}</span></h3>
       </div>
 
       <form onSubmit={handleSubmit} className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -56,7 +56,8 @@ const RealTimePlot = ({ newEmissionData }) => {
   }, [newEmissionData]);
 
   return (
-    <div>
+    <div className='mt-10'>
+      <h3 className='text-xl font-semibold p-4 pb-6'>Predicted CO2 emissions according to received sensor readings of the past 60 seconds:</h3>
       <Line
         ref={chartRef}
         data={data}
