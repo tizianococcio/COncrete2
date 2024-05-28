@@ -36,7 +36,7 @@ const RealTimePlot = ({ newEmissionData }) => {
         const updatedLabels = [...prevData.labels, currentTime];
         const updatedData = [...prevData.datasets[0].data, newEmissionData];
 
-        if (updatedLabels.length > 3600) {
+        if (updatedLabels.length > 60) {
           updatedLabels.shift();
           updatedData.shift();
         }
