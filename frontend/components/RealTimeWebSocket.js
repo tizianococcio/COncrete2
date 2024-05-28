@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import RealTimePlot from './RealTimePlot'
 
-const RealTimeWebSocket = ({ onTemperatureUpdate }) => {
+const RealTimeWebSocket = ({ onTemperatureUpdate, units }) => {
   const [data, setData] = useState(null);
   const [emissionData, setEmissionData] = useState(null);
 
@@ -28,20 +28,19 @@ const RealTimeWebSocket = ({ onTemperatureUpdate }) => {
       <h1 className="text-2xl font-bold">Real-Time Sensor Data</h1>
       {data ? (
         <div>
-          <ul>
-            <li>Temperature: {data.temperature.toFixed(2)} °C</li>
-            <li>Humidity: {data.humidity.toFixed(2)} %</li>
-            <li>Energy Consumption: {data.energy_consumption.toFixed(2)} kWh</li>
-            <li>Active Power Curve: {data.active_power_curve.toFixed(2)} W</li>
-            <li>Truck Drum Rotation Speed: {data.truck_drum_rotation_speed.toFixed(2)} rpm</li>
-            <li>Truck Drum Duration: {data.truck_drum_duration.toFixed(2)} minutes</li>
-            <li>Cement: {data.cement.toFixed(2)} kg</li>
-            <li>Sand: {data.sand.toFixed(2)} kg</li>
-            <li>Gravel: {data.gravel.toFixed(2)} kg</li>
-          </ul>
-          <div className="p-4 bg-slate-600 rounded-lg shadow-md m-4">
-            <h3 className='text-white font-bold'>Predicted CO2 Emissions: {data.predicted_co2.toFixed(2)} kg/m³</h3>
-          </div>         
+        <ul className="space-y-1 columns-2 font-mono">
+          {Object.entries(data).map(([key, value]) => (
+            units[key] !== undefined && (
+            <li key={key} className="flex justify-between">
+              <span>{key.replace(/_/g, ' ')}:</span>
+              <span className="font-sans font-semibold text-red-800">{value.toFixed(2)} {units[key]}</span>
+            </li>
+            )
+          ))}
+        </ul>          
+        <div className="p-4 bg-slate-600 rounded-lg shadow-md m-4 text-center">
+          <h3 className='text-white'>Predicted CO2 Emissions: <span className='text-xl font-bold'>{data.predicted_co2.toFixed(2)} kg/m³</span></h3>
+        </div>         
           <RealTimePlot newEmissionData={emissionData} /> 
         </div>
       ) : (

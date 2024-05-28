@@ -4,7 +4,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 
-const OptimalValues = ({ temperature }) => {
+const OptimalValues = ({ temperature, units }) => {
   const [optimalValues, setOptimalValues] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,7 +27,6 @@ const OptimalValues = ({ temperature }) => {
         }
       }
     };
-
     fetchOptimalValues();
     const intervalId = setInterval(fetchOptimalValues, 5000);
     
@@ -39,13 +38,14 @@ const OptimalValues = ({ temperature }) => {
 
   return (
     <div className="p-4 mt-2.5 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Optimal Input Parameters for 1m³ of concrete (@ {optimalValues.temperature.toFixed(2)} °C)</h2>
+      <h2 className="text-2xl font-bold">Optimal Input Parameters for 1m³ of concrete (@ <span className='text-red-800'>{optimalValues.temperature.toFixed(2)} °C</span>)</h2>
+      <p className='mb-4 text-slate-500'>Optimal values are computed and updated every 5 seconds.</p>
       {optimalValues ? (
         <ul className="space-y-1 columns-2 font-mono">
           {Object.entries(optimalValues).map(([key, value]) => (
             <li key={key} className="flex justify-between">
               <span>{key.replace(/_/g, ' ')}:</span>
-              <span className="font-sans font-semibold">{value.toFixed(2)}</span>
+              <span className="font-sans font-semibold text-red-800">{value.toFixed(2)} {units[key]}</span>
             </li>
           ))}
         </ul>
