@@ -41,6 +41,8 @@ services:
     depends_on:
       kafka:
         condition: service_healthy
+      zookeeper:
+        condition: service_healthy
 
   backend:
     build:
@@ -55,10 +57,18 @@ services:
     volumes:
       - ./model:/app/model  # Mount the model directory
     depends_on:
-      - producer
+      zookeeper:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
     ports:
       - "8000:8000"
       - "${WEB_SERVER_ADDRESS}:8001:8000" # ADDRESS:HOST-PORT:CONTAINER-PORT
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/units"]
+      interval: 5s
+      timeout: 10s
+      retries: 5
 
   frontend:
     build:
@@ -70,4 +80,5 @@ services:
       - API_BASE_URL=http://backend:8000
       - NEXT_PUBLIC_WEBSOCKET_ADDRESS=${WEBSOCKET_ADDRESS}      
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy

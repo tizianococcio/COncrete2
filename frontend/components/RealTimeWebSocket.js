@@ -10,9 +10,7 @@ const RealTimeWebSocket = ({ onTemperatureUpdate, units }) => {
 
   useEffect(() => {
     require('dotenv').config();
-
-    const wsAddress = process.env.NEXT_PUBLIC_WEBSOCKET_ADDRESS;
-    const ws = new WebSocket(wsAddress);
+    const ws = new WebSocket(process.env.NEXT_PUBLIC_WEBSOCKET_ADDRESS);
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data).data;
