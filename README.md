@@ -12,7 +12,7 @@ I've drawn insights from a variety of sources, including Alcemy's website, for e
 - https://en.wikipedia.org/wiki/Environmental_impact_of_concrete#Carbon_dioxide_emissions_and_climate_change
 
 ## TL;DR
-- Link to the fully-fledged demo application: (password: )
+- [Link to the fully-fledged demo application](http://49.13.232.168:3000) (User: _less_ Password: _concrete_)
 - [The basic Streamlit application](https://concrete2-o6pca7px7ty58ubm9jw5hh.streamlit.app/)
 
 # Data
@@ -56,7 +56,7 @@ I used TailwindCSS for basic styling.
 - CO2Optimizer
     - inject default bounds from a config file
     - add logging/error handling
-    - Improve in speed (maybe caching?)
+    - Improve in speed (caching/faster algorithm, maybe bayesian?)
 - ML Model
     - Use real-world data and build a proper model
 - Frontend
