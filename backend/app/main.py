@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException, WebSocket, Query
+from fastapi import FastAPI, HTTPException, WebSocket, WebSocketDisconnect, Query
 from typing import Optional, Dict, Any
 import asyncio
 from kafka import KafkaConsumer
@@ -61,9 +61,7 @@ def create_kafka_consumer() -> KafkaConsumer:
         value_deserializer=lambda x: json.loads(x.decode('utf-8'))
     )
 
-consumer = create_kafka_consumer()
-
-async def kafka_event_generator():
+async def kafka_event_generator(consumer: KafkaConsumer):
     """
     Generate events from Kafka consumer.
     
@@ -93,8 +91,17 @@ async def websocket_endpoint(websocket: WebSocket):
         websocket (WebSocket): The WebSocket connection instance.
     """
     await websocket.accept()
-    async for message in kafka_event_generator():
-        await websocket.send_json(message)
+    consumer = create_kafka_consumer()
+    try:
+        async for message in kafka_event_generator(consumer):
+            await websocket.send_json(message)
+    except WebSocketDisconnect:
+        logger.info("WebSocket connection was disconnected")
+    except Exception as e:
+        logger.error(f"Unexpected error: {e}")
+    finally:
+        consumer.close()
+        logger.info("Kafka consumer closed")
 
 @app.get("/units")
 def get_units() -> Dict[str, Any]:

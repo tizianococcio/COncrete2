@@ -13,7 +13,7 @@ I've drawn insights from a variety of sources, including Alcemy's website, for e
 
 ## TL;DR
 - Link to the fully-fledged demo application: (password: )
-- Link to the basic Streamlit application: 
+- [The basic Streamlit application](https://concrete2-o6pca7px7ty58ubm9jw5hh.streamlit.app/)
 
 # Data
 I used this information to generate synthetic data points. This is done in the file [01_data.py](01_data.py). As an attempt to have somewhat realistic data, I calibrated the training set so that with the default input values (those in the `streamlit` form), the CO2 emission is about 410 kg/m3, as described in the Wikipedia article above.
