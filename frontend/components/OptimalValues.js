@@ -45,7 +45,7 @@ const OptimalValues = ({ temperature, units }) => {
     };
   }, []);
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="p-4 mt-2.5 bg-white rounded-lg shadow-md">Loading optimizer (may take a while)...</div>;
   if (error) return <div>Error: {error}</div>;
 
   return (
