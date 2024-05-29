@@ -9,12 +9,14 @@ const OptimalValues = ({ temperature, units }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const temperatureRef = useRef(temperature);
+  const [countdown, setCountdown] = useState(null);
 
   useEffect(() => {
     temperatureRef.current = temperature;
   }, [temperature]);
 
   useEffect(() => {
+    const refreshInterval = 90_000;
     const fetchOptimalValues = async () => {
       if (temperatureRef.current !== null) {
         try {
@@ -28,9 +30,19 @@ const OptimalValues = ({ temperature, units }) => {
       }
     };
     fetchOptimalValues();
-    const intervalId = setInterval(fetchOptimalValues, 5000);
+    const intervalId = setInterval(() => {
+      fetchOptimalValues();
+      setCountdown(refreshInterval/1000);  // Reset countdown after fetching data
+    }, 90_000);
+
+    const countdownInterval = setInterval(() => {
+      setCountdown(prevCountdown => prevCountdown > 0 ? prevCountdown - 1 : refreshInterval/1000);
+    }, 1000);
     
-    return () => clearInterval(intervalId);
+    return () => {
+      clearInterval(intervalId);
+      clearInterval(countdownInterval);
+    };
   }, []);
 
   if (loading) return <div>Loading...</div>;
@@ -39,7 +51,7 @@ const OptimalValues = ({ temperature, units }) => {
   return (
     <div className="p-4 mt-2.5 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold">Optimal Input Parameters for 1m³ of concrete (@ <span className='text-red-800'>{optimalValues.temperature.toFixed(2)} °C</span>)</h2>
-      <p className='mb-4 text-slate-500'>Optimal values are computed and updated every 5 seconds.</p>
+      <p className='mb-4 text-slate-500'><div>Next update in {countdown} seconds...</div></p>
       {optimalValues ? (
         <ul className="space-y-1 columns-2 font-mono">
           {Object.entries(optimalValues).map(([key, value]) => (
