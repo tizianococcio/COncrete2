@@ -8,7 +8,9 @@ services:
       test: ["CMD", "nc", "-z", "localhost", "2181"]
       interval: 5s
       timeout: 10s
-      retries: 5      
+      retries: 5
+    networks:
+      - localconcretenetwork  
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -26,7 +28,9 @@ services:
       test: ["CMD", "nc", "-z", "localhost", "9092"]
       interval: 5s
       timeout: 10s
-      retries: 5      
+      retries: 5
+    networks:
+      - localconcretenetwork
 
   producer:
     build:
@@ -43,6 +47,8 @@ services:
         condition: service_healthy
       zookeeper:
         condition: service_healthy
+    networks:
+      - localconcretenetwork
 
   backend:
     build:
@@ -69,6 +75,8 @@ services:
       interval: 5s
       timeout: 10s
       retries: 5
+    networks:
+      - localconcretenetwork
 
   frontend:
     build:
@@ -82,3 +90,8 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    networks:
+      - localconcretenetwork
+
+networks:
+  localconcretenetwork:
