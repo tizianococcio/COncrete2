@@ -68,5 +68,6 @@ services:
       - "3000:3000"
     environment:
       - API_BASE_URL=http://backend:8000
+      - WEBSOCKET_ADDRESS=${WEBSOCKET_ADDRESS}      
     depends_on:
       - backend

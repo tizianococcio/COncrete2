@@ -1,14 +1,18 @@
 // frontend/src/components/RealTimeWebSocket.js
 "use client";
 import React, { useEffect, useState } from 'react';
-import RealTimePlot from './RealTimePlot'
+import RealTimePlot from './RealTimePlot';
+
 
 const RealTimeWebSocket = ({ onTemperatureUpdate, units }) => {
   const [data, setData] = useState(null);
   const [emissionData, setEmissionData] = useState(null);
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8001/ws');
+    require('dotenv').config();
+
+    const wsAddress = process.env.WEBSOCKET_ADDRESS || 'ws://localhost:8001/ws';
+    const ws = new WebSocket(wsAddress);
 
     ws.onmessage = (event) => {
       const newData = JSON.parse(event.data).data;
