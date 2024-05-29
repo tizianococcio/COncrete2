@@ -4,7 +4,6 @@ env_fast/
 temp/
 *.pyc
 node_modules/
-package-lock*
 .env
 
 # Dependencies
