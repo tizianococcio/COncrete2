@@ -56,7 +56,6 @@ I used TailwindCSS for basic styling.
 - CO2Optimizer
     - inject default bounds from a config file
     - add logging/error handling
-    - Improve in speed (caching/faster algorithm, maybe bayesian?)
 - ML Model
     - Use real-world data and build a proper model
 - Frontend
