@@ -16,7 +16,7 @@ const OptimalValues = ({ temperature, units }) => {
   }, [temperature]);
 
   useEffect(() => {
-    const refreshInterval = 90_000;
+    const refreshInterval = 10_000;
     const fetchOptimalValues = async () => {
       if (temperatureRef.current !== null) {
         try {
@@ -33,7 +33,7 @@ const OptimalValues = ({ temperature, units }) => {
     const intervalId = setInterval(() => {
       fetchOptimalValues();
       setCountdown(refreshInterval/1000);  // Reset countdown after fetching data
-    }, 90_000);
+    }, refreshInterval);
 
     const countdownInterval = setInterval(() => {
       setCountdown(prevCountdown => prevCountdown > 0 ? prevCountdown - 1 : refreshInterval/1000);
