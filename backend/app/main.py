@@ -122,20 +122,6 @@ def predict(params: InputParameters) -> Dict[str, Any]:
         HTTPException: If prediction fails.
     """
     try:
-        # data = {
-        #     'temperature': params.temperature,  # degrees Celsius
-        #     'humidity': params.humidity,  # percentage (%), default 60
-        #     'curing_time': params.curing_time,  # hours
-        #     'energy_consumption': params.energy_consumption,  # kilowatt-hours (kWh)
-        #     'amount_produced_m3': params.amount_produced_m3,
-        #     'dosing_events': params.dosing_events,  # Number of dosing events
-        #     'active_power_curve': params.active_power_curve,  # watts (W)
-        #     'truck_drum_rotation_speed': params.truck_drum_rotation_speed,  # rotations per minute (rpm)
-        #     'truck_drum_duration': params.truck_drum_duration,  # minutes
-        #     'cement': params.cement,  # kg
-        #     'sand': params.sand,  # kg
-        #     'gravel': params.gravel  # kg
-        # }
         data = params.dict() # Check if order is preserved!
         prediction = predict_emissions(model, data)
         return {"predicted_co2_emissions": prediction}
@@ -161,7 +147,7 @@ def get_optimal(temperature: Optional[float] = Query(None)) -> Dict[str, Any]:
         optimizer = CO2Optimizer(model)
         if temperature:
             optimizer.set_fixed_param('temperature', temperature)
-        optimal_inputs, co2_emissions = optimizer.optimize_parameters()
+        optimal_inputs, co2_emissions = optimizer.optimize()
         return {
             "optimal_parameters": optimal_inputs,
             "expected_co2_emissions": co2_emissions

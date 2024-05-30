@@ -1,6 +1,7 @@
-from typing import Dict, Any
+from typing import Dict, Any, List
 from model import predict_emissions
-from scipy.optimize import differential_evolution
+from scipy.optimize import direct, dual_annealing, differential_evolution, shgo
+
 
 class CO2Optimizer:
     """
@@ -50,40 +51,6 @@ class CO2Optimizer:
         else:
             raise ValueError(f"Parameter {param_name} is not a valid parameter")
 
-    def get_default_row(self, values: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Fills in a dictionary of parameter values, including the fixed parameters 
-        when present. Includes logic to add the `amount_produced_m3` parameter in 
-        the right position.
-
-        Args:
-            values (dict): List of parameter values.
-
-        Returns:
-            dict: Dictionary containing parameter names and values.
-        """
-        param_names = list(self.default_bounds.keys())
-        param_dict = {}
-        value_index = 0
-
-        for param in param_names:
-            if param in self.fixed_params:
-                param_dict[param] = self.fixed_params[param]
-            else:
-                param_dict[param] = values[value_index]
-                value_index += 1
-
-        # Insert amount_produced_m3 after energy_consumption
-        energy_consumption_index = param_names.index('energy_consumption') + 1
-        keys = list(param_dict.keys())
-        before = {k: param_dict[k] for k in keys[:energy_consumption_index]}
-        after = {k: param_dict[k] for k in keys[energy_consumption_index:]}
-
-        before.update({'amount_produced_m3': 1})
-        before.update(after)
-
-        return before
-
     def predict_co2_emissions(self, inputs: Dict[str, Any]) -> float:
         """
         Predicts CO2 emissions for the given values. This is used to train the optimizer model.
@@ -94,25 +61,33 @@ class CO2Optimizer:
         Returns:
             float: Predicted CO2 emissions.            
         """
-        # row = self.get_default_row(inputs)
-        # input_data = pd.DataFrame([row])
-        # co2_emissions = self.model.predict(input_data)[0]
-        return predict_emissions(self.model, self.get_default_row(inputs))
+        return predict_emissions(self.model, inputs)
 
-    def objective_function(self, params: Dict[str, Any], fixed_params) -> float:
+    def objective_function(self, params: List[float], fixed_params={}) -> float:
         """
         Objective function for optimization.
 
         Args:
-            params: Dictionary of parameter values.
-            fixed_params: List of fixed parameters.
+            params: List of parameter values.
+            fixed_params: Dictionary of fixed parameters.
 
         Returns:
             float: Predicted CO2 emissions.
         """
-        return self.predict_co2_emissions(params)
+        opt_params = [param for param in self.default_bounds if param not in fixed_params]
+        param_dict = dict(zip(opt_params, params))
 
-    def optimize_parameters(self) -> tuple[Dict, float]:
+        # Insert amount_produced_m3 after energy_consumption
+        energy_consumption_index = opt_params.index('energy_consumption') + 1
+        keys = list(param_dict.keys())
+        before = {k: param_dict[k] for k in keys[:energy_consumption_index]}
+        after = {k: param_dict[k] for k in keys[energy_consumption_index:]}
+
+        before.update({'amount_produced_m3': 1})
+        before.update(after)        
+        return self.predict_co2_emissions(before)
+
+    def optimize(self, algorithm='direct') -> tuple[Dict, float]:
         """
         Optimize parameters to minimize CO2 emissions using differential optimization.
 
@@ -124,7 +99,15 @@ class CO2Optimizer:
         bounds = [self.default_bounds[param] for param in self.default_bounds if param not in self.fixed_params]
 
         # Run the optimization
-        result = differential_evolution(self.objective_function, bounds, args=(self.fixed_params,), seed=42)
+        if algorithm == 'dual_annealing':
+            result = dual_annealing(self.objective_function, bounds, args=(self.fixed_params,), seed=42)
+        elif algorithm == 'differential_evolution':
+            result = differential_evolution(self.objective_function, bounds, args=(self.fixed_params,), seed=42)
+        elif algorithm == 'shgo':
+            result = shgo(self.objective_function, bounds, args=(self.fixed_params,))
+        else:
+            # default to 'direct' algorithm
+            result = direct(self.objective_function, bounds, args=(self.fixed_params,))
 
         # Get the optimal input values
         optimal_inputs = result.x
