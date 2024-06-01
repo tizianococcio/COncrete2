@@ -32,8 +32,8 @@ num_steps = 1000
 while True:
     # Parameters
     initial_temperature = 20
-    drift_per_step = np.random.uniform(0.01, 0.05)
-    noise_scale = 0.05
+    drift_per_step = np.random.uniform(0.001, 0.005) / 10
+    noise_scale = 0.002
     if step == num_steps:
         step = 0
 
