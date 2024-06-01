@@ -29,21 +29,14 @@ topic = 'concrete_production_data'
 
 step = 0
 num_steps = 1000
+sine_fluctuation = np.sin(10 * np.pi * np.linspace(0, 1, num_steps))
+
 while True:
-    # Parameters
-    initial_temperature = 20
-    drift_per_step = np.random.uniform(0.001, 0.005) / 10
-    noise_scale = 0.002
     if step == num_steps:
         step = 0
-
-    # Generate time steps
-    temperature_drift = initial_temperature + drift_per_step * step
-    random_noise = np.random.normal(scale=noise_scale)
-    temperature_with_noise = temperature_drift + random_noise
-
+    temperature = np.random.uniform(18, 22) + sine_fluctuation[step]
     data = {
-        'temperature': temperature_with_noise,
+        'temperature': temperature,
         'humidity': np.random.uniform(30, 80),
         'energy_consumption': np.random.uniform(100, 500),
         'active_power_curve': np.random.uniform(100, 300),
