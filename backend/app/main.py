@@ -147,7 +147,7 @@ def get_optimal(temperature: Optional[float] = Query(None)) -> Dict[str, Any]:
         optimizer = CO2Optimizer(model)
         if temperature:
             optimizer.set_fixed_param('temperature', temperature)
-        optimal_inputs, co2_emissions = optimizer.optimize()
+        optimal_inputs, co2_emissions = optimizer.optimize('differential_evolution')
         return {
             "optimal_parameters": optimal_inputs,
             "expected_co2_emissions": co2_emissions
