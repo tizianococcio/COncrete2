@@ -17,7 +17,7 @@ const OptimalValues = ({ temperature, units }) => {
   }, [temperature]);
 
   useEffect(() => {
-    const refreshInterval = 10_000;
+    const refreshInterval = 60_000;
     const fetchOptimalValues = async () => {
       if (temperatureRef.current !== null) {
         try {
