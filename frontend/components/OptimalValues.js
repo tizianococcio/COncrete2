@@ -7,6 +7,7 @@ import axios from 'axios';
 const OptimalValues = ({ temperature, units }) => {
   const [optimalValues, setOptimalValues] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [msg, setMessage] = useState("");
   const [error, setError] = useState(null);
   const temperatureRef = useRef(temperature);
   const [countdown, setCountdown] = useState(null);
@@ -20,7 +21,11 @@ const OptimalValues = ({ temperature, units }) => {
     const fetchOptimalValues = async () => {
       if (temperatureRef.current !== null) {
         try {
-          const response = await axios.get(`/api/getoptimal?temperature=${temperatureRef.current}`);
+          setMessage("Computing optimal parameters...")
+          const response = await axios.get(`/api/getoptimal?temperature=${temperatureRef.current}`).then(function (response) {
+            setMessage("");
+            return response;
+          });
           setOptimalValues(response.data.optimal_parameters);
           setLoading(false);
         } catch (err) {
@@ -51,7 +56,7 @@ const OptimalValues = ({ temperature, units }) => {
   return (
     <div className="p-4 mt-2.5 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold">Optimal Input Parameters for 1m³ of concrete (@ <span className='text-red-800'>{optimalValues.temperature.toFixed(2)} °C</span>)</h2>
-      <p className='mb-4 text-slate-500'><div>Next update in {countdown} seconds...</div></p>
+      <p className='mb-4 text-slate-500'><div>{msg ? msg : `Next update in ${countdown} seconds...`}</div></p>
       {optimalValues ? (
         <ul className="space-y-1 columns-2 font-mono">
           {Object.entries(optimalValues).map(([key, value]) => (
