@@ -2,7 +2,6 @@ from typing import Dict, Any, List
 from model import predict_emissions
 from scipy.optimize import direct, dual_annealing, differential_evolution, shgo
 
-
 class CO2Optimizer:
     """
     A class for optimizing CO2 emissions in a concrete production process.
@@ -63,7 +62,7 @@ class CO2Optimizer:
         """
         return predict_emissions(self.model, inputs)
 
-    def objective_function(self, params: List[float], fixed_params={}) -> float:
+    def objective_function(self, params: List[float], fixed_params: Dict[str, float] = None) -> float:
         """
         Objective function for optimization.
 
@@ -74,20 +73,33 @@ class CO2Optimizer:
         Returns:
             float: Predicted CO2 emissions.
         """
-        opt_params = [param for param in self.default_bounds if param not in fixed_params]
-        param_dict = dict(zip(opt_params, params))
+        if fixed_params is None:
+            fixed_params = self.fixed_params
+        
+        # Extract the parameter names to be optimized
+        opt_param_names = [param for param in self.default_bounds if param not in fixed_params]
 
+        # Create a dictionary of all parameters, starting with fixed ones
+        param_dict = fixed_params.copy()
+
+        # Add optimized parameters to the dictionary
+        for i, param_name in enumerate(opt_param_names):
+            param_dict[param_name] = params[i]
+        
         # Insert amount_produced_m3 after energy_consumption
-        energy_consumption_index = opt_params.index('energy_consumption') + 1
-        keys = list(param_dict.keys())
-        before = {k: param_dict[k] for k in keys[:energy_consumption_index]}
-        after = {k: param_dict[k] for k in keys[energy_consumption_index:]}
+        param_keys = list(param_dict.keys())
+        energy_consumption_index = param_keys.index('energy_consumption') + 1
+        keys_before = param_keys[:energy_consumption_index]
+        keys_after = param_keys[energy_consumption_index:]
+        
+        final_params = {key: param_dict[key] for key in keys_before}
+        final_params['amount_produced_m3'] = 1
+        final_params.update({key: param_dict[key] for key in keys_after})
 
-        before.update({'amount_produced_m3': 1})
-        before.update(after)        
-        return self.predict_co2_emissions(before)
+        return self.predict_co2_emissions(final_params)
 
-    def optimize(self, algorithm='direct') -> tuple[Dict, float]:
+
+    def optimize(self, algorithm='direct') -> tuple[Dict[str, float], float]:
         """
         Optimize parameters to minimize CO2 emissions using differential optimization.
 
@@ -124,3 +136,4 @@ class CO2Optimizer:
                 value_index += 1
 
         return optimal_inputs_dict, optimal_co2_emissions
+        
