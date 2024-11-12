@@ -14,32 +14,12 @@ import logging
 # Load environment variables from .env file
 load_dotenv()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
-
-def get_env_variable(key: str, default: Optional[str] = None) -> str:
-    """
-    Get environment variable or return a default value.
-    
-    Args:
-        key (str): Environment variable key.
-        default (Optional[str]): Default value if the environment variable is not set.
-    
-    Returns:
-        str: The value of the environment variable or the default value.
-    """
-    value = os.getenv(key, default)
-    if value is None:
-        logger.warning(f"Environment variable {key} is not set and no default value is provided.")
-    return value
-
 # Access environment variables with defaults
-host = get_env_variable('KAFKA_HOST', 'localhost:9092')
-user = get_env_variable('KAFKA_USER', 'user')
-pwd = get_env_variable('KAFKA_PWD', 'password')
-sasl_mechanism = get_env_variable('SASL_MECHANISM', 'PLAIN')
-security_protocol = get_env_variable('SECURITY_PROTOCOL', 'SASL_SSL')
+host = os.getenv('KAFKA_HOST')
+user = os.getenv('KAFKA_USER')
+pwd = os.getenv('KAFKA_PWD')
+sasl_mechanism = os.getenv('SASL_MECHANISM')
+security_protocol = os.getenv('SECURITY_PROTOCOL')
 
 app = FastAPI()
 model = load_model()
