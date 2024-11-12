@@ -24,6 +24,8 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     ports:
       - "9092:9092"
+    links:
+      - zookeeper:zookeeper
     healthcheck:
       test: ["CMD", "nc", "-z", "localhost", "9092"]
       interval: 5s

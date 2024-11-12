@@ -63,6 +63,9 @@ const RealTimePlot = ({ newEmissionData }) => {
         data={data}
         options={{
           responsive: true,
+          animation: {
+            duration: 0,
+          },
           scales: {
             x: {
               type: 'time',
